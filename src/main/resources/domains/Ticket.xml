@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_6.1.xsd">
+
+  <module name="helpdesk" package="com.axelor.apps.helpdesk.db"/>
+
+  <entity name="Ticket">
+    <many-to-one name="parentCategory" ref="com.axelor.apps.tma.db.TicketCategory"
+      title="Category"/>
+    <many-to-one name="category" ref="com.axelor.apps.tma.db.TicketCategory"
+      title="Ticket SubCategory"/>
+  </entity>
+
+</domain-models>

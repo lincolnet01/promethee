@@ -1,0 +1,16 @@
+plugins {
+	id 'com.axelor.app'
+}
+
+apply from: "../libs.gradle"
+apply from: "../version.gradle"
+
+axelor {
+	title "PROMETHEE"
+	description "PROMETHEE module"
+
+
+}
+dependencies {
+    api project(":modules:axelor-helpdesk")
+}
