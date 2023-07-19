@@ -3,24 +3,26 @@
   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.1.xsd">
 
 
-    <grid name="promethee-ticket-category-grid" title="All ticket categories" model="com.axelor.apps.promethee.db.TicketCategory">
-        <field name="code"/>
-        <field name="name"/>
-        <field name="categoryLevel"/>
-        <field name="parentCategory" />
-        <field name="description"/>
-    </grid>
+  <grid name="promethee-ticket-category-grid" title="All ticket categories"
+    model="com.axelor.apps.promethee.db.TicketCategory">
+    <field name="code"/>
+    <field name="name"/>
+    <field name="categoryLevel"/>
+    <field name="parentCategory"/>
+    <field name="description"/>
+  </grid>
 
-    <form model="com.axelor.apps.promethee.db.TicketCategory" title="Ticket Category" name="promethee-ticket-category-form" width="large">
-        <panel name="ticketCategoryPanel" colSpan="12">
-            <field name="code"/>
-            <field name="name"/>
-            <field name="categoryLevel"/>
-            <field name="parentCategory" />
-        </panel>
-        <panel name="descriptionPanel" title="Description">
-            <field name="description" showTitle="false" widget="html" colSpan="12"/>
-        </panel>
-    </form>
+  <form model="com.axelor.apps.promethee.db.TicketCategory" title="Ticket Category"
+    name="promethee-ticket-category-form" width="large">
+    <panel name="ticketCategoryPanel" colSpan="12">
+      <field name="code"/>
+      <field name="name"/>
+      <field name="categoryLevel"/>
+      <field name="parentCategory"/>
+    </panel>
+    <panel name="descriptionPanel" title="Description">
+      <field name="description" showTitle="false" widget="html" colSpan="12"/>
+    </panel>
+  </form>
 
 </object-views>
