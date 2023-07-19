@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_6.1.xsd">
+
+  <module name="promethee" package="com.axelor.apps.promethee.db"/>
+
+  <entity name="TicketCategory" cacheable="true" lang="java">
+    <string name="name" title="Name" required="true"/>
+    <string name="code" title="Code" required="true" unique="true"/>
+    <integer name="categoryLevel" title="Heriarchical Level" required="true" min="0"/>
+    <string name="description" title="Description" required="false" large="true"/>
+    <many-to-one name="parentCategory" ref="com.axelor.apps.promethee.db.TicketCategory" title="Parent Category" required="false"/>
+  </entity>
+
+</domain-models>

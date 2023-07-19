@@ -7,7 +7,7 @@ apply from: "../version.gradle"
 
 axelor {
 	title "PROMETHEE"
-	description "PROMETHEE module"
+	description "PROMETHEE module by APPOLO CONSULTING"
 
 
 }

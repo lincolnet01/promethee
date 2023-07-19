@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.1.xsd">
+
+    <menuitem title="Ticket Categories" name="helpdesk-promethee-ticket-category-all" action="helpdesk.promethee.ticketCategory.all" parent="helpdesk-config" order="300"/>
+
+    <action-view name="helpdesk.promethee.ticketCategory.all" title="Ticket Category" model="com.axelor.apps.promethee.db.TicketCategory">
+        <view type="grid" name="ticket-category-grid"/>
+        <view type="form" name="ticket-category-form"/>
+    </action-view>
+</object-views>
