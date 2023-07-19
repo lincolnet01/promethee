@@ -6,7 +6,7 @@
     <menuitem title="Ticket Categories" name="helpdesk-promethee-ticket-category-all" action="helpdesk.promethee.ticketCategory.all" parent="helpdesk-config" order="300"/>
 
     <action-view name="helpdesk.promethee.ticketCategory.all" title="Ticket Category" model="com.axelor.apps.promethee.db.TicketCategory">
-        <view type="grid" name="ticket-category-grid"/>
-        <view type="form" name="ticket-category-form"/>
+        <view type="grid" name="promethee-ticket-category-grid"/>
+        <view type="form" name="promethee-ticket-category-form"/>
     </action-view>
 </object-views>

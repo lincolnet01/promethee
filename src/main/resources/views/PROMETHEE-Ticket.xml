@@ -19,11 +19,11 @@
 
   <action-attrs name="action-ticket-category-equiv-attrs-find-all-parent">
     <attribute name="domain" for="parentCategory"
-      expr="eval: &quot;categoryLevel = '1' &quot;"/>
+      expr="eval: &quot;self.categoryLevel = 1 &quot;"/>
   </action-attrs>
 
   <action-attrs name="action-ticket-category-equiv-attrs-find-sub-categories">
     <attribute name="domain" for="category"
-      expr="eval: &quot;parentCategory.id = ${__this__?.parentCategory?.id} &quot;"/>
+      expr="eval: &quot;self.parentCategory.id = ${__this__?.parentCategory?.id} &quot;"/>
   </action-attrs>
 </object-views>

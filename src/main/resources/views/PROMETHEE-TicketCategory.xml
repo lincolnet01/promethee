@@ -11,7 +11,7 @@
         <field name="description"/>
     </grid>
 
-    <form model="com.axelor.apps.promethee.db.TicketCategory" title="Ticket Category" name="ticket-category-form" width="large">
+    <form model="com.axelor.apps.promethee.db.TicketCategory" title="Ticket Category" name="promethee-ticket-category-form" width="large">
         <panel name="ticketCategoryPanel" colSpan="12">
             <field name="code"/>
             <field name="name"/>
