@@ -6,12 +6,12 @@
   <module name="promethee" package="com.axelor.apps.promethee.db"/>
 
   <entity name="TicketCategory" cacheable="true" lang="java">
-    <string name="name" title="Name" required="true" translatable="true"/>
-    <string name="code" title="Code" required="true" unique="true" translatable="true"/>
-    <integer name="categoryLevel" title="Heriarchical Level" required="true" min="0" translatable="true"/>
-    <string name="description" title="Description" required="false" large="true" translatable="true"/>
+    <string name="name" title="Name" required="true" help="true"/>
+    <string name="code" title="Code" required="true" unique="true" help="true"/>
+    <integer name="categoryLevel" title="Heriarchical Level" required="true" min="0" help="true"/>
+    <string name="description" title="Description" required="false" large="true" help="true"/>
     <many-to-one name="parentCategory" ref="com.axelor.apps.promethee.db.TicketCategory"
-      title="Parent Category" required="false" translatable="true"/>
+      title="Parent Category" required="false" help="true"/>
   </entity>
 
 </domain-models>

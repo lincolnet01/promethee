@@ -7,9 +7,9 @@
 
   <entity name="Ticket">
     <many-to-one name="parentCategory" ref="com.axelor.apps.promethee.db.TicketCategory"
-      title="Category" translatable="true"/>
+      title="Category" help="true"/>
     <many-to-one name="category" ref="com.axelor.apps.promethee.db.TicketCategory"
-      title="Ticket SubCategory" translatable="true"/>
+      title="Ticket SubCategory" help="true"/>
   </entity>
 
 </domain-models>
