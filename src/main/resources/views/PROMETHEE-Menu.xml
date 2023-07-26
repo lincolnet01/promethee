@@ -3,6 +3,21 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.1.xsd">
 
+  <menuitem title="My tickets (current user)" name="promethee-my-ticket-all" id="promethee-my-ticket-all"
+    action="helpdesk.promethee.my.ticket.all" order="200" parent="helpdesk-root" />
+
+  <action-view name="helpdesk.promethee.my.ticket.all" title="My tickets (Current user)"
+    model="com.axelor.apps.helpdesk.db.Ticket">
+    <view type="kanban" name="ticket-kanban"/>
+    <view type="grid" name="ticket-grid"/>
+    <view type="form" name="ticket-form"/>
+    <view type="calendar" name="ticket-calendar"/>
+    <view-param name="search-filters" value="ticket-filters"/>
+    <domain>self.createdBy = :_user</domain>
+    <context name="_user" expr="eval: __user__"/>
+  </action-view>
+
+
   <menuitem title="Ticket Categories" name="helpdesk-promethee-ticket-category-all"
     action="helpdesk.promethee.ticketCategory.all" parent="helpdesk-config" order="300"/>
 
