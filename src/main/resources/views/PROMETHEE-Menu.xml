@@ -3,11 +3,11 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.1.xsd">
 
-  <menuitem title="My tickets (current user)" name="promethee-my-ticket-all" id="promethee-my-ticket-all"
-    action="helpdesk.promethee.my.ticket.all" order="200" parent="helpdesk-root" />
+  <menuitem title="My tickets" name="helpdesk-my-ticket-all" id="promethee-my-ticket-all"
+    action="helpdesk.my.ticket.all" order="200" parent="helpdesk-root"/>
 
-  <action-view name="helpdesk.promethee.my.ticket.all" title="My tickets (Current user)"
-    model="com.axelor.apps.helpdesk.db.Ticket">
+  <action-view name="helpdesk.my.ticket.all" title="My tickets"
+    model="com.axelor.apps.helpdesk.db.Ticket" id="helpdesk-promethee-my-ticket-all">
     <view type="kanban" name="ticket-kanban"/>
     <view type="grid" name="ticket-grid"/>
     <view type="form" name="ticket-form"/>
@@ -21,8 +21,7 @@
   <menuitem title="Ticket Categories" name="helpdesk-promethee-ticket-category-all"
     action="helpdesk.promethee.ticketCategory.all" parent="helpdesk-config" order="300"/>
 
-  <action-view name="helpdesk.promethee.ticketCategory.all" 
-    title="Ticket Category"
+  <action-view name="helpdesk.promethee.ticketCategory.all" title="Ticket Category"
     model="com.axelor.apps.promethee.db.TicketCategory">
     <view type="grid" name="promethee-ticket-category-grid"/>
     <view type="form" name="promethee-ticket-category-form"/>
