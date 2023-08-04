@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
         // GRADLE_OPTS = "-Dorg.gradle.daemon=false"
-        AXELOR_SOURCES_DIR = "~/axelor-sources"
+        AXELOR_SOURCES_DIR = "~/axelor-source-code"
         // CUSTOM_PROJECT_DIR = "axelor-aletheia"
         PROJECT_NAME="aletheia"
         CICD_WORKBENCH = "~/aletheia/ci-cd"
