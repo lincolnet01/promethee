@@ -62,11 +62,15 @@ pipeline {
 
         stage('Axelor: Construire le fichier .war'){
             steps{
+
+
                 sh '''
                 mkdir -p $CICD_WORKBENCH/$CICD_ENV/{apps, axelor,proxy,ci}
-                $AXELOR_SOURCES_DIR/gradlew clean build -x test
+                cd $AXELOR_SOURCES_DIR
+                gradlew clean build -x test
                 ls -l $AXELOR_SOURCES_DIR/build/libs
                 cp $AXELOR_SOURCES_DIR/build/libs/*.war $CICD_WORKBENCH/$CICD_ENV/apps/ROOT.war
+                cd ..
                 '''
             }
   
