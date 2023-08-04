@@ -1,8 +1,13 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'gradle:jdk11'
+        }
+    }
+
     parameters{
-        choice( choices:['clone','pull'], description: 'Axelor Sources Expectations', name: 'AXELOR_CODE')
-        choice( choices:['clone','pull'], description: 'Appolo Sources Expectations', name: 'APPOLO_CODE')
+        // choice( choices:['clone','pull'], description: 'Axelor Sources Expectations', name: 'AXELOR_CODE')
+        // choice( choices:['clone','pull'], description: 'Appolo Sources Expectations', name: 'APPOLO_CODE')
     }
     environment {
         // GRADLE_OPTS = "-Dorg.gradle.daemon=false"
@@ -18,13 +23,16 @@ pipeline {
     }
     stages {
         stage('Clone Official Repository Of Axelor'){
-            when{
-                expression { return env.AXELOR_CODE == 'clone'}
-            }
+            // when{
+            //     expression { return env.AXELOR_CODE == 'clone'}
+            // }
             steps{
+                checkout scmGit(
+                    branches: [[name: '*/master']], 
+                    extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR']], 
+                    userRemoteConfigs: [[ url: 'https://github.com/axelor/open-suite-webapp.git']]
+                )
                 sh '''
-                mkdir -p $AXELOR_SOURCES_DIR
-                git clone https://github.com/axelor/open-suite-webapp.git $AXELOR_SOURCES_DIR
                 sed -e 's|git@github.com:|https://github.com/|' -i $AXELOR_SOURCES_DIR/.gitmodules
                 cd $AXELOR_SOURCES_DIR
                 git checkout master
@@ -40,25 +48,10 @@ pipeline {
    
         }
 
-        stage('Pull Axelor Latest sources'){
-
-            when{
-                expression { return env.AXELOR_CODE == 'pull'}
-            }
-
-            steps{
-                sh '''
-                    cd $AXELOR_SOURCES_DIR
-                    git pull
-                    cd ..
-                '''
-            }
-        }
-
         stage('get custom project sources'){
   
             steps{
-                checkout scmGit(branches: [[name: '*/develop']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR/modules/axelor-open-suite/axelor-$PROJECT_NAME']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/prod-team/promethee.git']])
+                checkout scmGit(branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR/modules/axelor-open-suite/axelor-$PROJECT_NAME']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/prod-team/promethee.git']])
             }
         }
         stage('Build .war'){
