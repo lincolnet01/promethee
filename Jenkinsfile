@@ -19,7 +19,7 @@ pipeline {
     stages {
         stage('Clone Official Repository Of Axelor'){
             when{
-                expression { env.AXELOR_CODE == 'clone'}
+                expression { return env.AXELOR_CODE == 'clone'}
             }
             steps{
                 sh '''
@@ -43,7 +43,7 @@ pipeline {
         stage('Pull Axelor Latest sources'){
 
             when{
-                expression { env.AXELOR_CODE == 'pull'}
+                expression { return env.AXELOR_CODE == 'pull'}
             }
 
             steps{
@@ -55,10 +55,10 @@ pipeline {
             }
         }
 
-        stage('Pull Custom Code from APPOLO CONSULTING'){
+        stage('get custom project sources'){
   
             steps{
-                checkout scmGit(branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR/modules/axelor-open-suite/axelor-$PROJECT_NAME']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/prod-team/promethee.git']])
+                checkout scmGit(branches: [[name: '*/develop']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR/modules/axelor-open-suite/axelor-$PROJECT_NAME']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/prod-team/promethee.git']])
             }
         }
         stage('Build .war'){
