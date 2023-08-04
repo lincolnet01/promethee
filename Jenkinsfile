@@ -1,11 +1,9 @@
 pipeline {
     agent any
-    // agent {
-        // docker {
-        //     image 'gradle:jdk11'
-        //     args '-v $HOME/axelor-sources:/axelor-sources'
-        // }
-    // }
+    parameters{
+        choice( choices:['clone','pull'], description: 'Axelor Sources Expectations', name: 'AXELOR_CODE')
+        choice( choices:['clone','pull'], description: 'Appolo Sources Expectations', name: 'APPOLO_CODE')
+    }
     environment {
         // GRADLE_OPTS = "-Dorg.gradle.daemon=false"
         AXELOR_SOURCES_DIR = "~/axelor-sources"
@@ -20,6 +18,9 @@ pipeline {
     }
     stages {
         stage('Clone Official Repository Of Axelor'){
+            when{
+                expression { env.AXELOR_CODE == 'clone'}
+            }
             steps{
                 sh '''
                 mkdir -p $AXELOR_SOURCES_DIR
@@ -33,11 +34,29 @@ pipeline {
                 git submodule foreach git checkout master
                 git submodule foreach git pull origin master
                 ls -al $AXELOR_SOURCES_DIR/modules
+                cd ..
                 '''
             }
    
         }
+
+        stage('Pull Axelor Latest sources'){
+
+            when{
+                expression { env.AXELOR_CODE == 'pull'}
+            }
+
+            steps{
+                sh '''
+                    cd $AXELOR_SOURCES_DIR
+                    git pull
+                    cd ..
+                '''
+            }
+        }
+
         stage('Pull Custom Code from APPOLO CONSULTING'){
+  
             steps{
                 checkout scmGit(branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR/modules/axelor-open-suite/axelor-$PROJECT_NAME']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/prod-team/promethee.git']])
             }
