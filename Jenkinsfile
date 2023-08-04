@@ -1,12 +1,13 @@
 pipeline {
-    agent {
-        docker {
-            image 'gradle:jdk11'
-            args '-v $HOME/axelor-sources:/axelor-sources'
-        }
-    }
+    agent any
+    // agent {
+        // docker {
+        //     image 'gradle:jdk11'
+        //     args '-v $HOME/axelor-sources:/axelor-sources'
+        // }
+    // }
     environment {
-        GRADLE_OPTS = "-Dorg.gradle.daemon=false"
+        // GRADLE_OPTS = "-Dorg.gradle.daemon=false"
         AXELOR_SOURCES_DIR = "~/axelor-sources"
         // CUSTOM_PROJECT_DIR = "axelor-aletheia"
         PROJECT_NAME="aletheia"
@@ -19,18 +20,21 @@ pipeline {
     }
     stages {
         stage('Clone Official Repository Of Axelor'){
-            sh '''
-            mkdir -p $AXELOR_SOURCES_DIR
-            git clone https://github.com/axelor/open-suite-webapp.git $AXELOR_SOURCES_DIR
-            sed -e 's|git@github.com:|https://github.com/|' -i $AXELOR_SOURCES_DIR/.gitmodules
-            git checkout master
-            git submodule sync
-            git submodule init
-            git submodule update
-            git submodule foreach git checkout master
-            git submodule foreach git pull origin master
-            ls -al $AXELOR_SOURCES_DIR/modules
-            '''
+            steps{
+                sh '''
+                mkdir -p $AXELOR_SOURCES_DIR
+                git clone https://github.com/axelor/open-suite-webapp.git $AXELOR_SOURCES_DIR
+                sed -e 's|git@github.com:|https://github.com/|' -i $AXELOR_SOURCES_DIR/.gitmodules
+                git checkout master
+                git submodule sync
+                git submodule init
+                git submodule update
+                git submodule foreach git checkout master
+                git submodule foreach git pull origin master
+                ls -al $AXELOR_SOURCES_DIR/modules
+                '''
+            }
+   
         }
         stage('Pull Custom Code from APPOLO CONSULTING'){
    
