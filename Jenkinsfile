@@ -6,7 +6,7 @@ pipeline {
     }
 
     parameters{
-        // choice( choices:['clone','pull'], description: 'Axelor Sources Expectations', name: 'AXELOR_CODE')
+        choice( choices:['init','none'], description: 'Axelor Sources Expectations', name: 'AXELOR_CODE')
         // choice( choices:['clone','pull'], description: 'Appolo Sources Expectations', name: 'APPOLO_CODE')
     }
     environment {
@@ -22,16 +22,21 @@ pipeline {
 
     }
     stages {
-        stage('Clone Official Repository Of Axelor'){
-            // when{
-            //     expression { return env.AXELOR_CODE == 'clone'}
-            // }
+        stage('Axelor: récuperer le code') {
             steps{
                 checkout scmGit(
                     branches: [[name: '*/master']], 
                     extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR']], 
                     userRemoteConfigs: [[ url: 'https://github.com/axelor/open-suite-webapp.git']]
                 )
+            }
+        }
+        stage('Axelor : initialiser les sous-modules'){
+            when{
+                expression { return env.AXELOR_CODE == 'init'}
+            }
+            steps{
+          
                 sh '''
                 sed -e 's|git@github.com:|https://github.com/|' -i $AXELOR_SOURCES_DIR/.gitmodules
                 cd $AXELOR_SOURCES_DIR
@@ -48,13 +53,14 @@ pipeline {
    
         }
 
-        stage('get custom project sources'){
+        stage('Appolo: récuperer les sources du projet'){
   
             steps{
                 checkout scmGit(branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR/modules/axelor-open-suite/axelor-$PROJECT_NAME']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/prod-team/promethee.git']])
             }
         }
-        stage('Build .war'){
+
+        stage('Axelor: Construire le fichier .war'){
             steps{
                 sh '''
                 mkdir -p $CICD_WORKBENCH/$CICD_ENV/{apps, axelor,proxy,ci}
@@ -65,7 +71,7 @@ pipeline {
             }
   
         }
-        stage('Manage Docker Layer'){
+        stage('Docker: Configurer les fichiers necessaires pour construire les conteneurs'){
 
             steps{
                 script{
@@ -86,6 +92,10 @@ pipeline {
                 sed -e 's|project_env:|$CICD_ENV|' -i $CICD_WORKBENCH/$CICD_ENV/axelor/axelor-config.properties
                 sed -e 's|project_name:|$PROJECT_NAME|' -i $CICD_WORKBENCH/$CICD_ENV/docker-compose.yml
                 sed -e 's|project_env:|$CICD_ENV|' -i $CICD_WORKBENCH/$CICD_ENV/docker-compose.yml
+                cd $CICD_WORKBENCH/$CICD_ENV/
+                docker compose down
+                docker compose up -d
+                cd ..
                 '''
             }
         }
