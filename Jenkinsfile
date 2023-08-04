@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'gradle:jdk11'
-        }
-    }
+    agent any
 
     parameters{
         choice( choices:['init','none'], description: 'Axelor Sources Expectations', name: 'AXELOR_CODE')
@@ -47,8 +43,16 @@ pipeline {
                 git submodule foreach git checkout master
                 git submodule foreach git pull origin master
                 ls -al $AXELOR_SOURCES_DIR/modules
-                cd ..
+                
                 '''
+            }
+
+            post{
+                success {
+                    sh '''
+                    cd ..
+                    '''
+                }
             }
    
         }
@@ -58,21 +62,42 @@ pipeline {
             steps{
                 checkout scmGit(branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR/modules/axelor-open-suite/axelor-$PROJECT_NAME']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/prod-team/promethee.git']])
             }
+
+            post{
+                success {
+                    sh '''
+                    cd ..
+                    mkdir -p $CICD_WORKBENCH/$CICD_ENV/{apps, axelor,proxy,ci}
+                    '''
+                }
+            }
         }
 
         stage('Axelor: Construire le fichier .war'){
+
+            agent{
+                docker  {
+                    image 'gradle:jdk11'
+                    args '-v "$AXELOR_SOURCES_DIR":/app'
+                    reuseNode true
+                }
+            }
+
             steps{
 
-
-                sh '''
-                mkdir -p $CICD_WORKBENCH/$CICD_ENV/{apps, axelor,proxy,ci}
-                cd $AXELOR_SOURCES_DIR
-                gradlew clean build -x test
-                ls -l $AXELOR_SOURCES_DIR/build/libs
-                cp $AXELOR_SOURCES_DIR/build/libs/*.war $CICD_WORKBENCH/$CICD_ENV/apps/ROOT.war
-                cd ..
-                '''
+                sh './gradlew clean build -x test '
             }
+
+            post{
+                success {
+                    sh '''
+                    cp $AXELOR_SOURCES_DIR/build/libs/*.war $CICD_WORKBENCH/$CICD_ENV/apps/ROOT.war
+                    cd ..
+                    '''
+                }
+            }
+
+            
   
         }
         stage('Docker: Configurer les fichiers necessaires pour construire les conteneurs'){
