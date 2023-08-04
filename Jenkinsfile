@@ -25,6 +25,7 @@ pipeline {
                 mkdir -p $AXELOR_SOURCES_DIR
                 git clone https://github.com/axelor/open-suite-webapp.git $AXELOR_SOURCES_DIR
                 sed -e 's|git@github.com:|https://github.com/|' -i $AXELOR_SOURCES_DIR/.gitmodules
+                cd $AXELOR_SOURCES_DIR
                 git checkout master
                 git submodule sync
                 git submodule init
