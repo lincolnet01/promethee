@@ -37,37 +37,40 @@ pipeline {
    
         }
         stage('Pull Custom Code from APPOLO CONSULTING'){
-   
-            checkout scmGit(branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR/modules/axelor-open-suite/axelor-$PROJECT_NAME']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/prod-team/promethee.git']])
+            steps{
+                checkout scmGit(branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR/modules/axelor-open-suite/axelor-$PROJECT_NAME']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/prod-team/promethee.git']])
+            }
         }
         stage('Build .war'){
-            sh '''
-            mkdir -p $CICD_WORKBENCH/$CICD_ENV/{apps, axelor,proxy,ci}
-            $AXELOR_SOURCES_DIR/gradlew clean build -x test
-            ls -l $AXELOR_SOURCES_DIR/build/libs
-            cp $AXELOR_SOURCES_DIR/build/libs/*.war $CICD_WORKBENCH/$CICD_ENV/apps/ROOT.war
-            '''
+            steps{
+                sh '''
+                mkdir -p $CICD_WORKBENCH/$CICD_ENV/{apps, axelor,proxy,ci}
+                $AXELOR_SOURCES_DIR/gradlew clean build -x test
+                ls -l $AXELOR_SOURCES_DIR/build/libs
+                cp $AXELOR_SOURCES_DIR/build/libs/*.war $CICD_WORKBENCH/$CICD_ENV/apps/ROOT.war
+                '''
+            }
+  
         }
         stage('Manage Docker Layer'){
-            
-            checkout scmGit(branches: [[name: '*/main']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$CICD_WORKBENCH/$CICD_ENV/ci']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/sysadmin/cicd.git']])
-            def db_pwd = ('0'..'z').shuffled().take(10).join()
-            def app_enc_pwd= "CiCd@Appolo@2023!"
-
-            sh '''
-            cp $CICD_WORKBENCH/$CICD_ENV/ci/docker-compose.yml $CICD_WORKBENCH/$CICD_ENV/docker-compose.yml
-            cp $CICD_WORKBENCH/$CICD_ENV/ci/.env $CICD_WORKBENCH/$CICD_ENV/.env
-            cp $CICD_WORKBENCH/$CICD_ENV/ci/axelor/axelor-config.properties $CICD_WORKBENCH/$CICD_ENV/axelor/axelor-config.properties
-            sed -e 's|db_name:|$PROJECT_NAME-db|' -i $CICD_WORKBENCH/$CICD_ENV/.env
-            sed -e 's|db_user:|$PROJECT_NAME-app|' -i $CICD_WORKBENCH/$CICD_ENV/.env
-            sed -e 's|db_password:|$db_pwd|' -i $CICD_WORKBENCH/$CICD_ENV/.env
-            sed -e 's|encryption_password:|$app_enc_pwd|' -i $CICD_WORKBENCH/$CICD_ENV/.env
-            sed -e 's|project_name:|$PROJECT_NAME|' -i $CICD_WORKBENCH/$CICD_ENV/axelor/axelor-config.properties
-            sed -e 's|project_env:|$CICD_ENV|' -i $CICD_WORKBENCH/$CICD_ENV/axelor/axelor-config.properties
-            sed -e 's|project_name:|$PROJECT_NAME|' -i $CICD_WORKBENCH/$CICD_ENV/docker-compose.yml
-            sed -e 's|project_env:|$CICD_ENV|' -i $CICD_WORKBENCH/$CICD_ENV/docker-compose.yml
-            
-            '''
+            steps{
+                checkout scmGit(branches: [[name: '*/main']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$CICD_WORKBENCH/$CICD_ENV/ci']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/sysadmin/cicd.git']])
+                def db_pwd = ('0'..'z').shuffled().take(10).join()
+                def app_enc_pwd= "CiCd@Appolo@2023!"
+                sh '''
+                cp $CICD_WORKBENCH/$CICD_ENV/ci/docker-compose.yml $CICD_WORKBENCH/$CICD_ENV/docker-compose.yml
+                cp $CICD_WORKBENCH/$CICD_ENV/ci/.env $CICD_WORKBENCH/$CICD_ENV/.env
+                cp $CICD_WORKBENCH/$CICD_ENV/ci/axelor/axelor-config.properties $CICD_WORKBENCH/$CICD_ENV/axelor/axelor-config.properties
+                sed -e 's|db_name:|$PROJECT_NAME-db|' -i $CICD_WORKBENCH/$CICD_ENV/.env
+                sed -e 's|db_user:|$PROJECT_NAME-app|' -i $CICD_WORKBENCH/$CICD_ENV/.env
+                sed -e 's|db_password:|$db_pwd|' -i $CICD_WORKBENCH/$CICD_ENV/.env
+                sed -e 's|encryption_password:|$app_enc_pwd|' -i $CICD_WORKBENCH/$CICD_ENV/.env
+                sed -e 's|project_name:|$PROJECT_NAME|' -i $CICD_WORKBENCH/$CICD_ENV/axelor/axelor-config.properties
+                sed -e 's|project_env:|$CICD_ENV|' -i $CICD_WORKBENCH/$CICD_ENV/axelor/axelor-config.properties
+                sed -e 's|project_name:|$PROJECT_NAME|' -i $CICD_WORKBENCH/$CICD_ENV/docker-compose.yml
+                sed -e 's|project_env:|$CICD_ENV|' -i $CICD_WORKBENCH/$CICD_ENV/docker-compose.yml
+                '''
+            }
         }
     
     }
