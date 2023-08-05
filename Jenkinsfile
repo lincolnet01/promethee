@@ -53,7 +53,7 @@ pipeline {
         stage('Appolo: récuperer les sources du projet'){
   
             steps{
-                checkout scmGit(branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR/modules/axelor-open-suite/axelor-$PROJECT_NAME']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/prod-team/promethee.git']])
+                checkout scmGit(branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '${AXELOR_SOURCES_DIR}/modules/axelor-open-suite/axelor-${PROJECT_NAME}']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/prod-team/promethee.git']])
                 sh '''
                 mkdir -p ${CICD_WORKBENCH}/${CICD_ENV}/{apps, axelor,proxy,ci}
                 '''
@@ -80,7 +80,7 @@ pipeline {
                     def db_pwd = ('0'..'z').shuffled().take(10).join()
                     def app_enc_pwd= "CiCd@Appolo@2023!"
                 }
-                checkout scmGit(branches: [[name: '*/main']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$CICD_WORKBENCH/$CICD_ENV/ci']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/sysadmin/cicd.git']])
+                checkout scmGit(branches: [[name: '*/main']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '${CICD_WORKBENCH}/${CICD_ENV}/ci']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/sysadmin/cicd.git']])
    
                 sh '''
                 cp ${CICD_WORKBENCH}/${CICD_ENV}/ci/docker-compose.yml ${CICD_WORKBENCH}/${CICD_ENV}/docker-compose.yml
