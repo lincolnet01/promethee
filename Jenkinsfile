@@ -75,17 +75,20 @@ pipeline {
 
         stage('Axelor: Construire le fichier .war'){
 
-            agent{
-                docker  {
-                    image 'gradle:jdk11'
-                    args '-v "$AXELOR_SOURCES_DIR":/app'
-                    reuseNode true
-                }
-            }
+            // agent{
+            //     docker  {
+            //         image 'gradle:jdk11'
+            //         args '-v "$AXELOR_SOURCES_DIR":/app'
+            //         reuseNode true
+            //     }
+            // }
 
             steps{
 
-                sh './gradlew clean build -x test '
+                sh '''
+                cd $AXELOR_SOURCES_DIR
+                ./gradlew clean build -x test 
+                '''
             }
 
             post{
