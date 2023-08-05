@@ -7,10 +7,10 @@ pipeline {
     }
     environment {
         // GRADLE_OPTS = "-Dorg.gradle.daemon=false"
-        AXELOR_SOURCES_DIR = "~/axelor-source-code"
-        // CUSTOM_PROJECT_DIR = "axelor-aletheia"
-        PROJECT_NAME="aletheia"
-        CICD_WORKBENCH = "~/aletheia/ci-cd"
+        AXELOR_SOURCES_DIR = "~/axelor-sources-code"
+        // CUSTOM_PROJECT_DIR = "axelor-promethee"
+        PROJECT_NAME="promethee"
+        CICD_WORKBENCH = "~/promethee/ci-cd"
         CICD_ENV="dev"
         SSH_USER = "root" //Utile en production on aura besoin de se connecter en SSH etc...
         SSH_SERVER_IP = ""
