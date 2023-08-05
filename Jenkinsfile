@@ -3,7 +3,7 @@ pipeline {
 
     parameters{
         choice( choices:['init','none'], description: 'Axelor Sources Expectations', name: 'AXELOR_CODE')
-        // choice( choices:['clone','pull'], description: 'Appolo Sources Expectations', name: 'APPOLO_CODE')
+    // choice( choices:['clone','pull'], description: 'Appolo Sources Expectations', name: 'APPOLO_CODE')
     }
     environment {
         // GRADLE_OPTS = "-Dorg.gradle.daemon=false"
@@ -78,11 +78,11 @@ pipeline {
         }
         stage('Docker: Configurer les fichiers necessaires pour construire les conteneurs'){
 
-            steps{
-                script{
-                    def db_pwd = ('0'..'z').shuffled().take(10).join()
-                    def app_enc_pwd= "CiCd@Appolo@2023!"
-                }
+            steps {
+                // script{ 
+                //     def dbPwd = '${promethee}@2023!'
+                //     def appEncPwd= 'CiCd@Appolo@2023!'
+                // }
                 checkout scmGit(branches: [[name: '*/main']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: "${CICD_WORKBENCH}/${CICD_ENV}/ci"]], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/sysadmin/cicd.git']])
    
                 sh '''
@@ -91,8 +91,8 @@ pipeline {
                 cp ${CICD_WORKBENCH}/${CICD_ENV}/ci/axelor/axelor-config.properties ${CICD_WORKBENCH}/${CICD_ENV}/axelor/axelor-config.properties
                 sed -e 's|db_name:|${PROJECT_NAME}-db|' -i ${CICD_WORKBENCH}/${CICD_ENV}/.env
                 sed -e 's|db_user:|${PROJECT_NAME}-app|' -i ${CICD_WORKBENCH}/${CICD_ENV}/.env
-                sed -e 's|db_password:|${db_pwd}|' -i ${CICD_WORKBENCH}/${CICD_ENV}/.env
-                sed -e 's|encryption_password:|${app_enc_pwd}|' -i ${CICD_WORKBENCH}/${CICD_ENV}/.env
+                sed -e 's|db_password:|${PROJECT_NAME}@2023!${CICD_ENV}|' -i ${CICD_WORKBENCH}/${CICD_ENV}/.env
+                sed -e 's|encryption_password:|CiCd@Appolo@2023!|' -i ${CICD_WORKBENCH}/${CICD_ENV}/.env
                 sed -e 's|project_name:|${PROJECT_NAME}|' -i ${CICD_WORKBENCH}/${CICD_ENV}/axelor/axelor-config.properties
                 sed -e 's|project_env:|${CICD_ENV}|' -i ${CICD_WORKBENCH}/${CICD_ENV}/axelor/axelor-config.properties
                 sed -e 's|project_name:|${PROJECT_NAME}|' -i ${CICD_WORKBENCH}/${CICD_ENV}/docker-compose.yml
