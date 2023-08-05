@@ -70,7 +70,7 @@ pipeline {
                 sh '''
                 cd ${AXELOR_SOURCES_DIR}
                 ./gradlew clean build -x test 
-                cp ${AXELOR_SOURCES_DIR}/build/libs/*.war ${CICD_WORKBENCH}/${CICD_ENV}/apps/ROOT.war
+                cp build/libs/*.war ${CICD_WORKBENCH}/${CICD_ENV}/apps/ROOT.war
                 cd ..
                 '''
             }
