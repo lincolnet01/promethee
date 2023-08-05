@@ -55,7 +55,10 @@ pipeline {
             steps{
                 checkout scmGit(branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '${AXELOR_SOURCES_DIR}/modules/axelor-open-suite/axelor-${PROJECT_NAME}']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/prod-team/promethee.git']])
                 sh '''
-                mkdir -p ${CICD_WORKBENCH}/${CICD_ENV}/{apps, axelor,proxy,ci}
+                mkdir -p ${CICD_WORKBENCH}/${CICD_ENV}/apps
+                mkdir -p ${CICD_WORKBENCH}/${CICD_ENV}/axelor
+                mkdir -p ${CICD_WORKBENCH}/${CICD_ENV}/proxy
+                mkdir -p ${CICD_WORKBENCH}/${CICD_ENV}/ci
                 '''
             }
         }
