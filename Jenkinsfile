@@ -43,7 +43,7 @@ pipeline {
                 git submodule update
                 git submodule foreach git checkout master
                 git submodule foreach git pull origin master
-                ls -al ${AXELOR_SOURCES_DIR}/modules
+                ls -al modules
                 cd ..
                 '''
             }
@@ -57,7 +57,6 @@ pipeline {
                 sh '''
                 mkdir -p ${CICD_WORKBENCH}/${CICD_ENV}/{apps, axelor,proxy,ci}
                 '''
-            
             }
         }
 
