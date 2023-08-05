@@ -7,10 +7,10 @@ pipeline {
     }
     environment {
         // GRADLE_OPTS = "-Dorg.gradle.daemon=false"
-        AXELOR_SOURCES_DIR = "~/axelor-sources-code"
+        AXELOR_SOURCES_DIR = "axelor-sources-code"
         // CUSTOM_PROJECT_DIR = "axelor-promethee"
         PROJECT_NAME="promethee"
-        CICD_WORKBENCH = "~/promethee/ci-cd"
+        CICD_WORKBENCH = "promethee/ci-cd"
         CICD_ENV="dev"
         SSH_USER = "root" //Utile en production on aura besoin de se connecter en SSH etc...
         SSH_SERVER_IP = ""
@@ -20,6 +20,7 @@ pipeline {
     stages {
         stage('Axelor: récuperer le code') {
             steps{
+                sh 'mkdir -p $AXELOR_SOURCES_DIR'
                 checkout scmGit(
                     branches: [[name: '*/master']], 
                     extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR']], 
