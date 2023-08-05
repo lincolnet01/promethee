@@ -43,16 +43,8 @@ pipeline {
                 git submodule foreach git checkout master
                 git submodule foreach git pull origin master
                 ls -al $AXELOR_SOURCES_DIR/modules
-                
+                cd ..
                 '''
-            }
-
-            post{
-                success {
-                    sh '''
-                    cd ..
-                    '''
-                }
             }
    
         }
@@ -61,47 +53,25 @@ pipeline {
   
             steps{
                 checkout scmGit(branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$AXELOR_SOURCES_DIR/modules/axelor-open-suite/axelor-$PROJECT_NAME']], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/prod-team/promethee.git']])
-            }
-
-            post{
-                success {
-                    sh '''
-                    cd ..
-                    mkdir -p $CICD_WORKBENCH/$CICD_ENV/{apps, axelor,proxy,ci}
-                    '''
-                }
+                sh '''
+                mkdir -p $CICD_WORKBENCH/$CICD_ENV/{apps, axelor,proxy,ci}
+                '''
+            
             }
         }
 
         stage('Axelor: Construire le fichier .war'){
-
-            // agent{
-            //     docker  {
-            //         image 'gradle:jdk11'
-            //         args '-v "$AXELOR_SOURCES_DIR":/app'
-            //         reuseNode true
-            //     }
-            // }
 
             steps{
 
                 sh '''
                 cd $AXELOR_SOURCES_DIR
                 ./gradlew clean build -x test 
+                cp $AXELOR_SOURCES_DIR/build/libs/*.war $CICD_WORKBENCH/$CICD_ENV/apps/ROOT.war
+                cd ..
                 '''
             }
 
-            post{
-                success {
-                    sh '''
-                    cp $AXELOR_SOURCES_DIR/build/libs/*.war $CICD_WORKBENCH/$CICD_ENV/apps/ROOT.war
-                    cd ..
-                    '''
-                }
-            }
-
-            
-  
         }
         stage('Docker: Configurer les fichiers necessaires pour construire les conteneurs'){
 
