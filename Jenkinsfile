@@ -81,10 +81,6 @@ pipeline {
         stage('Docker: Configurer les fichiers necessaires pour construire les conteneurs'){
 
             steps {
-                // script{ 
-                //     def dbPwd = '${promethee}@2023!'
-                //     def appEncPwd= 'CiCd@Appolo@2023!'
-                // }
                 checkout scmGit(branches: [[name: '*/main']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: "${CICD_WORKBENCH}/${CICD_ENV}/ci"]], userRemoteConfigs: [[credentialsId: 'cicd.appolo-consulting.com', url: 'http://cicd.appolo-consulting.com/sysadmin/cicd.git']])
    
                 sh '''
