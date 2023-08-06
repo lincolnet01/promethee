@@ -15,6 +15,8 @@ pipeline {
         SSH_USER = "root" //Utile en production on aura besoin de se connecter en SSH etc...
         SSH_SERVER_IP = ""
         SSH_PASSWORD = ""
+        DB_PWD = "${PROJECT_NAME}@2023!${CICD_ENV}"
+        APP_ENC_PWD = "CiCd@Appolo@2023!"
 
     }
     stages {
@@ -91,8 +93,8 @@ pipeline {
                 cp ${CICD_WORKBENCH}/${CICD_ENV}/ci/axelor/axelor-config.properties ${CICD_WORKBENCH}/${CICD_ENV}/axelor/axelor-config.properties
                 sed -e 's|db_name:|${PROJECT_NAME}-db|' -i ${CICD_WORKBENCH}/${CICD_ENV}/.env
                 sed -e 's|db_user:|${PROJECT_NAME}-app|' -i ${CICD_WORKBENCH}/${CICD_ENV}/.env
-                sed -e 's|db_password:|${PROJECT_NAME}@2023!${CICD_ENV}|' -i ${CICD_WORKBENCH}/${CICD_ENV}/.env
-                sed -e 's|encryption_password:|CiCd@Appolo@2023!|' -i ${CICD_WORKBENCH}/${CICD_ENV}/.env
+                sed -e 's|db_password:|${DB_PWD}|' -i ${CICD_WORKBENCH}/${CICD_ENV}/.env
+                sed -e 's|encryption_password:|${APP_ENC_PWD}|' -i ${CICD_WORKBENCH}/${CICD_ENV}/.env
                 sed -e 's|project_name:|${PROJECT_NAME}|' -i ${CICD_WORKBENCH}/${CICD_ENV}/axelor/axelor-config.properties
                 sed -e 's|project_env:|${CICD_ENV}|' -i ${CICD_WORKBENCH}/${CICD_ENV}/axelor/axelor-config.properties
                 sed -e 's|project_name:|${PROJECT_NAME}|' -i ${CICD_WORKBENCH}/${CICD_ENV}/docker-compose.yml
